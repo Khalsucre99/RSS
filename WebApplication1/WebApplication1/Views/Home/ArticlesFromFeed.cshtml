@@ -1,0 +1,107 @@
+﻿@model List<Article>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker3.min.css" rel="stylesheet">
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!-- Datepicker JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+
+
+
+<form action="@Url.Action("ArticlesFromFeed", "Home")" method="post">
+    <div class="row mb-1">
+        <div class="col-md-6">
+            <!-- Datepicker for startDate -->
+            <label class="control-label">Start Date</label>
+            <div class="input-group date" data-provide="datepicker">
+                <input type="text" name="startDate" class="form-control" value="@ViewBag.startDate">
+                <div class="input-group-addon">
+                    <span class="glyphicon glyphicon-th"></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <!-- Datepicker for endDate -->
+            <label class="control-label">End Date</label>
+            <div class="input-group date" data-provide="datepicker">
+                <input type="text" name="endDate" class="form-control" value="@ViewBag.endDate">
+                <div class="input-group-addon">
+                    <span class="glyphicon glyphicon-th"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    </div>
+
+    <!-- Champ caché pour passer le feedId -->
+    <input type="hidden" name="feedId" value="@ViewBag.FeedId" />
+
+    <!-- Bouton pour soumettre le formulaire -->
+    <input type="submit" value="Filter" class="btn btn-primary mb-1" />
+</form>
+
+<form asp-action="ArticlesFromFeed" method="post">
+    <input type="hidden" name="feedId" value="@ViewBag.FeedId" />
+    <button type="submit" class="btn btn-primary">Reload</button>
+
+</form>
+
+<style>
+    /* Styles for the card container */
+    .card {
+        border: 1px solid #ccc;
+        padding: 20px;
+        margin: 10px;
+        background-color: #fff;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Styles for the card title */
+    .card-title a {
+        color: #333;
+        text-decoration: none;
+    }
+
+    /* Styles for the card image */
+    .card-img-top {
+        max-width: 100%;
+        height: auto;
+    }
+
+
+</style>
+
+
+
+@if (!Model.Any())
+{
+    <p>Aucun article disponible.</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var article in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img class="card-img-top" src="@article.ThumbnailUrl" alt="Image pour @article.Title">
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="@article.Link">@article.Title</a></h5>
+                        <p class="card-text">@article.Description</p>
+                        <small>Publié le: @article.PublicationDate.ToShortDateString()</small>
+                        <br />
+                        <small>Auteur: @article.Creator</small>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
